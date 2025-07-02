@@ -3,12 +3,30 @@ OpenAI API service for AI-powered features
 """
 from openai import OpenAI
 from src.config import OPENAI_API_KEY
+from src.services.database_service import DatabaseService
 
 class OpenAIService:
     def __init__(self):
         self.client = OpenAI(api_key=OPENAI_API_KEY)
+        self.db = DatabaseService()
     
-    async def ask_question(self, question: str) -> str:
+    def _log_conversation(self, ctx, command: str, user_input: str, bot_response: str, tokens_used: int = 0):
+        """Log conversation to database"""
+        try:
+            self.db.save_conversation(
+                user_id=str(ctx.author.id),
+                username=ctx.author.name,
+                guild_id=str(ctx.guild.id) if ctx.guild else "DM",
+                guild_name=ctx.guild.name if ctx.guild else "Direct Message",
+                command=command,
+                user_input=user_input,
+                bot_response=bot_response,
+                tokens_used=tokens_used
+            )
+        except Exception as e:
+            print(f"Failed to log conversation: {e}")
+    
+    async def ask_question(self, ctx, question: str) -> str:
         """Ask a question to GPT and get response matching user's tone"""
         try:
             response = self.client.chat.completions.create(
@@ -25,11 +43,18 @@ class OpenAIService:
             if answer and len(answer) > 1900:
                 answer = answer[:1900] + "... (답변이 길어서 잘렸습니다)"
                 
-            return answer or "응답을 받지 못했습니다."
+            result = answer or "응답을 받지 못했습니다."
+            
+            # Log conversation
+            self._log_conversation(ctx, "ask", question, result, 200)
+            
+            return result
         except Exception as e:
-            return f'오류가 발생했습니다: {str(e)}'
+            error_msg = f'오류가 발생했습니다: {str(e)}'
+            self._log_conversation(ctx, "ask", question, error_msg, 0)
+            return error_msg
     
-    async def get_joke(self) -> str:
+    async def get_joke(self, ctx) -> str:
         """Get a funny joke"""
         try:
             response = self.client.chat.completions.create(
@@ -40,9 +65,16 @@ class OpenAIService:
                 ],
                 max_tokens=100
             )
-            return response.choices[0].message.content or "농담을 준비하지 못했어요."
+            result = response.choices[0].message.content or "농담을 준비하지 못했어요."
+            
+            # Log conversation
+            self._log_conversation(ctx, "joke", "농담 요청", result, 100)
+            
+            return result
         except Exception as e:
-            return f'농담을 준비하지 못했어요... 오류: {str(e)}'
+            error_msg = f'농담을 준비하지 못했어요... 오류: {str(e)}'
+            self._log_conversation(ctx, "joke", "농담 요청", error_msg, 0)
+            return error_msg
     
     async def translate_text(self, target_lang: str, text: str) -> str:
         """Translate text to target language"""

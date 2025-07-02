@@ -16,7 +16,12 @@ def setup_basic_commands(bot):
         """사용 가능한 명령어 목록을 출력합니다."""
         command_list = """
 **🤖 사용 가능한 명령어:**
+
+**📋 기본 명령어:**
 • `!hello` - 봇이 인사합니다
+• `!commands` - 이 명령어 목록을 보여줍니다
+
+**🧠 AI 명령어 (토큰 사용):**
 • `!ask [질문]` - AI에게 질문합니다
 • `!joke` - 재미있는 농담을 해줍니다
 • `!translate [언어] [텍스트]` - 텍스트를 번역합니다
@@ -24,6 +29,8 @@ def setup_basic_commands(bot):
 • `!explain [개념]` - 복잡한 개념을 쉽게 설명해줍니다
 • `!code [언어] [문제]` - 간단한 코드를 작성해줍니다
 • `!usage` - OpenAI API 사용량을 확인합니다
+
+**🎵 음악 명령어 (무료):**
 • `!join` - 봇이 음성 채널에 참가합니다
 • `!leave` - 봇이 음성 채널에서 나갑니다
 • `!song [노래명]` - 유튜브에서 노래를 재생하거나 대기열에 추가합니다
@@ -31,6 +38,13 @@ def setup_basic_commands(bot):
 • `!playlist` - 현재 대기열을 확인합니다
 • `!clear` - 대기열을 모두 지웁니다
 • `!stop` - 음악 재생을 중지합니다
-• `!commands` - 이 명령어 목록을 보여줍니다
+
+**📊 대화 내역 명령어:**
+• `!history [개수]` - 최근 대화 내역 보기 (기본 5개)
+• `!mystats` - 내 사용 통계 보기
+• `!search [키워드]` - 대화 내역에서 검색
+• `!serverstats` - 서버 사용 통계 보기
+• `!clearhistory` - 내 대화 내역 삭제
+• `!dbstats` - 전체 봇 통계 보기
         """
         await ctx.send(command_list) 

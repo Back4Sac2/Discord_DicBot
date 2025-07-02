@@ -12,6 +12,7 @@ from src.config import DISCORD_TOKEN
 from src.commands.basic_commands import setup_basic_commands
 from src.commands.ai_commands import setup_ai_commands
 from src.commands.music_commands import setup_music_commands
+from src.commands.history_commands import setup_history_commands
 
 def main():
     """Main function to start the Discord bot"""
@@ -22,6 +23,7 @@ def main():
     setup_basic_commands(bot)
     setup_ai_commands(bot)
     setup_music_commands(bot)
+    setup_history_commands(bot)
     
     # Start the bot
     if not DISCORD_TOKEN:

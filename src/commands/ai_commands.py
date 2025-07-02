@@ -11,13 +11,13 @@ def setup_ai_commands(bot):
     @bot.command(name='ask')
     async def ask(ctx, *, question):
         """OpenAI를 사용한 질문 답변"""
-        answer = await ai_service.ask_question(question)
+        answer = await ai_service.ask_question(ctx, question)
         await ctx.send(answer)
     
     @bot.command(name='joke')
     async def joke(ctx):
         """재미있는 농담을 해줍니다."""
-        joke_text = await ai_service.get_joke()
+        joke_text = await ai_service.get_joke(ctx)
         await ctx.send(f"😄 {joke_text}")
     
     @bot.command(name='translate')
