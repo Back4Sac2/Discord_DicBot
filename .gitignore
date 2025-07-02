@@ -35,6 +35,8 @@ ENV/
 *.swp
 *.swo
 
+conversation_history.db
+
 # OS
 .DS_Store
 Thumbs.db
